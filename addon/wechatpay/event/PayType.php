@@ -36,7 +36,7 @@ class PayType
             }
         }
         $info = array(
-            "pay_type"      => "yipay",
+            "pay_type"      => "wechatpay",
             "pay_type_name" => "YiPay",
             "edit_url"      => "wechatpay://shop/pay/config",
             "shop_url"      => "wechatpay://shop/pay/config",
