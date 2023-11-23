@@ -26,7 +26,7 @@ class Pay extends BaseShop
         if (request()->isAjax()) {
             $api           = input("api", "");//公众账号ID
             $mch_id          = input("mch_id", "");//商户号
-            $app_secrect     = input("mch_sercet", "");//应用密钥
+            $app_secrect     = input("app_secrect", "");//应用密钥
             $pay_status     = input("pay_status", "");//应用密钥
             $data            = array(
                 "api"           => $api,
