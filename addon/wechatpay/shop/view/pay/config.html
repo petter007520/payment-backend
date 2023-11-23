@@ -10,100 +10,33 @@
 {block name="main"}
 <div class="layui-form form-wrap">
 	<div class="layui-form-item">
-		<label class="layui-form-label">商户号：</label>
+		<label class="layui-form-label">支付API：</label>
+		<div class="layui-input-block">
+			<input name="api" type="text" value="{$info.value.api ?? ''}" class="layui-input len-long" lay-verify="required">
+		</div>
+		<div class="word-aux"><span>[API]</span>支付API</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">商户名：</label>
 		<div class="layui-input-block">
 			<input name="mch_id" type="text" value="{$info.value.mch_id ?? ''}" class="layui-input len-long" lay-verify="required">
 		</div>
-		<div class="word-aux"><span>[MCHID]</span>微信支付商户号</div>
+		<div class="word-aux"><span>[MCHID]</span>Yipay商户名</div>
 	</div>
 
 	<div class="layui-form-item">
-		<label class="layui-form-label">支付接口类型：</label>
+		<label class="layui-form-label">商户私钥：</label>
 		<div class="layui-input-block">
-			<input type="radio" title="v2" name="api_type" lay-filter="api_type" value="v2" {if !$info.value || ($info.value && $info.value.api_type eq 'v2')}checked{/if}>
-			<input type="radio" title="v3" name="api_type" lay-filter="api_type" value="v3" {if $info.value && $info.value.api_type eq 'v3'}checked{/if}>
+			<input name="mch_sercet" type="text" value="{$info.value.mch_sercet ?? ''}" class="layui-input len-long" lay-verify="required">
 		</div>
+		<div class="word-aux"><span>[SERCERT]</span>商户私钥</div>
 	</div>
-
-	<div class="layui-form-item api-type-config v2-config" {if empty($info.value) || ( ($info.value.api_type eq 'v2') || ($info.value.transfer_status == 1 && $info.value.transfer_type eq 'v2') ) }style="display:block"{/if}>
-		<label class="layui-form-label"><span class="required">*</span>APIv2密钥 ：</label>
-		<div class="layui-input-block">
-			<input name="pay_signkey" lay-verify="pay_signkey" type="text" value="{$info.value.pay_signkey ?? ''}" class="layui-input len-long">
-		</div>
-		<div class="word-aux">微信商户APIv2密钥 <a href="https://kf.qq.com/faq/180830UVRZR7180830Ij6ZZz.html" class="text-color" target="_blank">查看指引</a></div>
-	</div>
-
-	<div class="layui-form-item api-type-config v3-config" {if !empty($info.value) && ( ($info.value.api_type eq 'v3') || ($info.value.transfer_status == 1 && $info.value.transfer_type eq 'v3') ) }style="display:block"{/if}>
-		<label class="layui-form-label"><span class="required">*</span>APIv3密钥 ：</label>
-		<div class="layui-input-block">
-			<input name="v3_pay_signkey" lay-verify="v3_pay_signkey" type="text" value="{$info.value.v3_pay_signkey ?? ''}" class="layui-input len-long">
-		</div>
-		<div class="word-aux">微信商户APIv3密钥 <a href="https://kf.qq.com/faq/180830E36vyQ180830AZFZvu.html" class="text-color" target="_blank">查看指引</a></div>
-	</div>
-
-	<div class="layui-form-item">
-		<label class="layui-form-label"><span class="required">*</span>支付证书cert：</label>
-		<div class="layui-input-block">
-			{notempty name="$info.value.apiclient_cert"}
-			<p class="file-upload">已上传</p>
-			{else/}
-			<p class="file-upload">未上传</p>
-			{/notempty}
-			<button type="button" class="layui-btn" id="cert_upload">
-				<i class="layui-icon">&#xe67c;</i>上传文件
-			</button>
-			<input type="hidden" name="apiclient_cert" class="layui-input len-long" value="{$info.value.apiclient_cert ?? ''}" lay-verify="apiclient_cert">
-		</div>
-		<div class="word-aux">上传apiclient_cert.pem文件</div>
-	</div>
-
-	<div class="layui-form-item">
-		<label class="layui-form-label"><span class="required">*</span>支付证书key：</label>
-		<div class="layui-input-block">
-			{notempty name="$info.value.apiclient_key"}
-			<p class="file-upload">已上传</p>
-			{else/}
-			<p class="file-upload">未上传</p>
-			{/notempty}
-			<button type="button" class="layui-btn" id="key_upload">
-				<i class="layui-icon">&#xe67c;</i>上传文件
-			</button>
-			<input type="hidden" name="apiclient_key" class="layui-input len-long" value="{$info.value.apiclient_key ?? ''}" lay-verify="apiclient_key">
-		</div>
-		<div class="word-aux">上传apiclient_key.pem文件</div>
-		<div class="word-aux">微信商户API证书 <a href="https://kf.qq.com/faq/161222NneAJf161222U7fARv.html" class="text-color" target="_blank">查看指引</a></div>
-	</div>
-
-	<input type="hidden" name="plateform_cert" class="layui-input len-long" value="{$info.value.plateform_cert ?? ''}">
 
 	<div class="layui-form-item">
 		<label class="layui-form-label">是否启用支付：</label>
 		<div class="layui-input-inline">
 			<input type="checkbox" name="pay_status" value="1" lay-skin="switch" {if condition="$info.value && $info.value.pay_status == 1"} checked {/if} />
-		</div>
-	</div>
-
-	<div class="layui-form-item">
-		<label class="layui-form-label">是否启用退款：</label>
-		<div class="layui-input-inline">
-			<input type="checkbox" name="refund_status" value="1" lay-skin="switch" {if condition="$info.value && $info.value.refund_status == 1"} checked {/if} />
-		</div>
-	</div>
-
-	<div class="layui-form-item">
-		<label class="layui-form-label">是否启用转账：</label>
-		<div class="layui-input-inline">
-			<input type="checkbox" name="transfer_status" value="1" lay-skin="switch" {if condition="$info.value && $info.value.transfer_status == 1"} checked {/if} lay-filter="transfer_status"/>
-		</div>
-	</div>
-
-	<div class="transfer-config" {if condition="!$info.value || $info.value.transfer_status != 1"}style="display:none;"{/if}>
-		<div class="layui-form-item">
-			<label class="layui-form-label">转账使用产品：</label>
-			<div class="layui-input-inline">
-				<input type="radio" title="企业付款到零钱" name="transfer_type" lay-filter="transfer_type" value="v2" {if !$info.value || ($info.value && $info.value.transfer_type eq 'v2')}checked{/if}>
-				<input type="radio" title="商家转账到零钱" name="transfer_type" lay-filter="transfer_type" value="v3" {if $info.value && $info.value.transfer_type eq 'v3'}checked{/if}>
-			</div>
 		</div>
 	</div>
 

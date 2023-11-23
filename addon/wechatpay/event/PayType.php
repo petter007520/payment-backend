@@ -36,12 +36,12 @@ class PayType
             }
         }
         $info = array(
-            "pay_type"      => "wechatpay",
-            "pay_type_name" => "微信支付",
+            "pay_type"      => "yipay",
+            "pay_type_name" => "YiPay",
             "edit_url"      => "wechatpay://shop/pay/config",
             "shop_url"      => "wechatpay://shop/pay/config",
-            "logo"          => "addon/wechatpay/icon.png",
-            "desc"          => "微信支付，用户通过扫描二维码、微信内打开商品页面购买等多种方式调起微信支付模块完成支付。"
+            "logo"          => "addon/wechatpay/sanpay.png",
+            "desc"          => "YiPay"
         );
         return $info;
 
