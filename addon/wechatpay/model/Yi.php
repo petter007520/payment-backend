@@ -59,7 +59,7 @@ class Yi extends BaseModel
 
         $signBody = [
             "partnerid" => $this->mchId,//商户ID
-            "amount" => $param["pay_money"] * 100,//*字符串类型 “20.00”  请保留2位小数
+            "amount" => $param["pay_money"],//*字符串类型 “20.00”  请保留2位小数
             "notifyurl" => $this->callback_url,//交易金额（元）
             "orderid" => $param["out_trade_no"],//订单时间（例如：2021-05-06 10:20:09）
             "remark" => '',// 有填值就行，签名用
