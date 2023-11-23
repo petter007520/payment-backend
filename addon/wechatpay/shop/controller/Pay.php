@@ -24,35 +24,15 @@ class Pay extends BaseShop
     {
         $config_model = new ConfigModel();
         if (request()->isAjax()) {
-            $appid           = input("appid", "");//公众账号ID
+            $api           = input("api", "");//公众账号ID
             $mch_id          = input("mch_id", "");//商户号
-            $app_secrect     = input("app_secrect", "");//应用密钥
-            $pay_signkey     = input("pay_signkey", "");//支付签名串API密钥
-            $apiclient_cert  = input("apiclient_cert", "");//支付证书cert
-            $apiclient_key   = input("apiclient_key", "");//支付证书key
-            $app_type        = input("app_type", "");//支持端口 如web app
-            $pay_status      = input("pay_status", 0);//支付启用状态
-            $refund_status   = input("refund_status", 0);//退款启用状态
-            $transfer_status = input("transfer_status", 0);//转账启用状态
-            $transfer_type   = input("transfer_type", 'v2');
-            $api_type   = input("api_type", 'v2');
-            $plateform_cert   = input("plateform_cert", '');
-            $v3_pay_signkey = input('v3_pay_signkey', '');
+            $app_secrect     = input("mch_sercet", "");//应用密钥
+            $pay_status     = input("pay_status", "");//应用密钥
             $data            = array(
-                "appid"           => $appid,
+                "api"           => $api,
                 "mch_id"          => $mch_id,
                 "app_secrect"     => $app_secrect,
-                "pay_signkey"     => $pay_signkey,
-                "apiclient_cert"  => $apiclient_cert,
-                "apiclient_key"   => $apiclient_key,
-                "refund_status"   => $refund_status,
                 "pay_status"      => $pay_status,
-                "transfer_status" => $transfer_status,
-                "app_type"        => $app_type,
-                'transfer_type'   => $transfer_type,
-                'plateform_cert'  => $plateform_cert,
-                'api_type'        => $api_type,
-                'v3_pay_signkey'  => $v3_pay_signkey
             );
             $result          = $config_model->setPayConfig($data, $this->site_id, $this->app_module);
             return $result;
