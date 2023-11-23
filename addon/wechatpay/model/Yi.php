@@ -14,6 +14,7 @@ use app\model\BaseModel;
 use app\model\system\Pay as PayCommon;
 use app\model\upload\Upload;
 use EasyWeChat\Factory;
+use think\facade\Log;
 
 /**
  * 微信支付v3支付
@@ -68,9 +69,8 @@ class Yi extends BaseModel
 
         $sign = $this->sign($signBody);
         $signBody = array_merge($signBody,['sign'=>$sign]);
-        $result = $this->curl($this->api,$signBody);
-
-
+        $result = $this->curl($this->api,http_build_query($signBody));
+        Log::write('支付返回：'.json_encode($result).'--签名参数'.json_encode($signBody));
         if ($result["status"] != 200 ) return $this->error([], $result["msg"]);
 
         $return = [
