@@ -24,15 +24,17 @@ class Pay extends BaseShop
     {
         $config_model = new ConfigModel();
         if (request()->isAjax()) {
-            $api           = input("api", "");//公众账号ID
+            $api           = input("api", "");//api
             $mch_id          = input("mch_id", "");//商户号
             $app_secrect     = input("app_secrect", "");//应用密钥
-            $pay_status     = input("pay_status", "");//应用密钥
+            $pay_status     = input("pay_status", "");//支付开关
+            $callback_url     = input("callback_url", "");//回调URL
             $data            = array(
                 "api"           => $api,
                 "mch_id"          => $mch_id,
                 "app_secrect"     => $app_secrect,
                 "pay_status"      => $pay_status,
+                "callback_url"    => $callback_url,
             );
             $result          = $config_model->setPayConfig($data, $this->site_id, $this->app_module);
             return $result;
