@@ -36,7 +36,8 @@
         "workerman/gatewayclient": "3.0.0",
         "wechatpay/wechatpay": "1.4.5",
         "topthink/think-queue": "^3.0",
-        "lizhichao/word": "^2.1"
+        "lizhichao/word": "^2.1",
+      "ext-curl": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "4.4.41",

@@ -85,14 +85,15 @@ class Pay extends BaseModel
      * 实例化支付接口
      */
     public function factory(){
-        $class = 'addon\\wechatpay\\model\\'. ucfirst($this->api);
+//        $class = 'addon\\wechatpay\\model\\'. ucfirst($this->api);
+        $class = 'addon\\wechatpay\\model\\'. 'Yi';
         if (!class_exists($class)) throw new ApiException(-1, "Class '{$class}' not found");
 
         try {
             $this->app = new $class($this->config);
         } catch (\Exception $e) {
-            Log::write('微信支付配置错误:' . $e->getMessage().$e->getFile().$e->getLine());
-            throw new ApiException(-1, "微信支付配置错误");
+            Log::write('Yi支付配置错误:' . $e->getMessage().$e->getFile().$e->getLine());
+            throw new ApiException(-1, "Yi支付配置错误");
         }
     }
 
@@ -115,28 +116,7 @@ class Pay extends BaseModel
         }
 
         try {
-            $result = $this->app->pay($param);
-
-            // 对视频号订单做处理
-            if ($result['code'] == 0 && in_array($param['scene'], [ 1175, 1176, 1177, 1191, 1195 ])) {
-                $weapp_model = new Weapp($param['site_id']);
-                $prepay_id = str_replace('prepay_id=', '', $result['data']['data']['package']);
-                $order_info = $this->getOrderInfo($param["out_trade_no"], $param['openid'], $prepay_id, $param['scene']);
-                $res = $weapp_model->createOrder($order_info);
-                if($res['code'] >= 0){
-                    $order_params = [
-                        "order_id" => $res['data']['data']['order_id'],
-                        "out_order_id" => $res['data']['data']['out_order_id'],
-                        "openid" => $param["openid"]
-                    ];
-                    $config = $weapp_model->getPaymentParams($order_params);
-                    $result = $this->success([
-                        'type' => 'jsapi',
-                        'data' => $config['data']['payment_params']
-                    ]);
-                }
-            }
-            return $result;
+            return $this->app->pay($param);
         } catch (\Exception $e) {
             Log::write('微信支付接口调用失败，请求参数：'. json_encode($param) .' 错误原因：'. $e->getMessage().$e->getFile().$e->getLine());
             return $this->error([], '微信支付接口调用失败');
