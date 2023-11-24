@@ -41,6 +41,7 @@ class Yi extends BaseModel
         $this->api = $config['api'] ? $config['api'].'/api/v3/payment' : '';
         $this->apikey = $config['app_secrect'];
         $this->mchId = $config['mch_id'];
+        $this->callback_url = $config['callback_url'];
     }
 
     /**
