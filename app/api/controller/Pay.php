@@ -65,6 +65,15 @@ class Pay extends BaseApi
         return $this->response($info);
     }
 
+
+    /**
+     * 回调
+     * @return void
+     */
+    public function payNotify(){
+        return event('PayNotify', $this->params, true);
+    }
+
     /**
      * 支付方式
      */
