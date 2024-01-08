@@ -22,7 +22,7 @@ class Pay
      */
     public function handle($params)
     {
-        if ($params["pay_type"] == "wechatpay") {
+        if (in_array($params["pay_type"],['ydpay','ydWechatH5','ydWechatScan','ydAlipayH5','ydQuickPay','ydWechatPu','ydWechatMini','xxpay'])) {
 
             $app_type = $params['app_type'];
             $is_weapp = 0;
@@ -48,7 +48,7 @@ class Pay
                     break;
             }
             $params["trade_type"] = $trade_type;
-            $pay_model            = new PayModel($is_weapp, $params['site_id']);
+            $pay_model            = new PayModel($is_weapp, $params['site_id'],$params["pay_type"]);
             $result               = $pay_model->pay($params);
             return $result;
         }

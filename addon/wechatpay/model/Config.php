@@ -24,20 +24,31 @@ class Config extends BaseModel
      * 设置支付配置
      * array $data
      */
-    public function setPayConfig($data, $site_id = 0, $app_module = 'shop')
+    public function setPayConfig($data, $pay_type,$site_id = 0, $app_module = 'shop')
     {
+        $config_key = 'WECHAT_PAY_CONFIG';
+        if(in_array($pay_type,['ydWechatH5','ydWechatScan','ydAlipayH5','ydQuickPay','ydWechatPu','ydWechatMini','xxpay'])){
+            $config_key = 'WECHAT_PAY_CONFIG';
+        }elseif ($pay_type=='ydpay'){
+            $config_key = 'YD_PAY_CONFIG';
+        }
         $config = new ConfigModel();
-        $res    = $config->setConfig($data, '微信支付配置', 1, [['site_id', '=', $site_id], ['app_module', '=', $app_module], ['config_key', '=', 'WECHAT_PAY_CONFIG']]);
-        return $res;
+        return $config->setConfig($data, '微信支付配置', 1, [['site_id', '=', $site_id], ['app_module', '=', $app_module], ['config_key', '=', $config_key]]);
     }
 
     /**
      * 获取支付配置
      */
-    public function getPayConfig($site_id = 0, $app_module = 'shop')
+    public function getPayConfig($pay_type='ydpay',$site_id = 0, $app_module = 'shop')
     {
+        $config_key = 'WECHAT_PAY_CONFIG';
+        if(in_array($pay_type,['ydWechatH5','ydWechatScan','ydAlipayH5','ydQuickPay','ydWechatPu','ydWechatMini','xxpay'])){
+            $config_key = 'WECHAT_PAY_CONFIG';
+        }elseif ($pay_type=='ydpay'){
+            $config_key = 'YD_PAY_CONFIG';
+        }
         $config = new ConfigModel();
-        $res    = $config->getConfig([['site_id', '=', $site_id], ['app_module', '=', $app_module], ['config_key', '=', 'WECHAT_PAY_CONFIG']]);
+        $res    = $config->getConfig([['site_id', '=', $site_id], ['app_module', '=', $app_module], ['config_key', '=', $config_key]]);
         if (!empty($res['data']['value'])) {
             $res['data']['value']['api_type'] = $res['data']['value']['api_type'] ?? 'v2';
             $res['data']['value']['transfer_type'] = $res['data']['value']['transfer_type'] ?? 'v2';

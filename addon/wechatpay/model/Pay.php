@@ -57,15 +57,37 @@ class Pay extends BaseModel
      */
     private $site_id;
 
-    public function __construct($is_weapp = 0, $site_id = 1)
+    /**
+     * 支付类型
+     * @var
+     */
+    private $pay_type_way = '';
+
+    const CODE = [
+        'ydWechatH5'    =>901,
+        'ydWechatScan'  =>902,
+        'ydAlipayH5'    =>904,
+        'ydQuickPay'    =>911,
+        'ydWechatPu'    =>930,
+        'ydWechatMini'  =>931,
+        'xxpay'         =>934,
+    ];
+
+    public function __construct($is_weapp = 0, $site_id = 1,$pay_type = 'xxpay')
     {
         $this->is_weapp = $is_weapp;
         $this->site_id = $site_id;
 
         // 支付配置
         $config_model = new Config();
-        $this->config = $config_model->getPayConfig($site_id)['data']['value'];
-        if (empty($this->config)) throw new ApiException(-1, "平台未配置微信支付");
+        $this->config = $config_model->getPayConfig($pay_type,$site_id)['data']['value'];
+        if (empty($this->config)) throw new ApiException(-1, "平台未配置支付");
+        if(in_array($pay_type,['ydWechatH5','ydWechatScan','ydAlipayH5','ydQuickPay','ydWechatPu','ydWechatMini','xxpay'])){
+            $this->pay_type_way = 'Yi';
+            $this->config['pay_code'] = self::CODE[$pay_type]??'';
+        }elseif ($pay_type=='ydpay'){
+            $this->pay_type_way = 'Yd';
+        }
 
         $this->api = $this->config['api_type'];
         $this->config['site_id'] = $site_id;
@@ -86,7 +108,7 @@ class Pay extends BaseModel
      */
     public function factory(){
 //        $class = 'addon\\wechatpay\\model\\'. ucfirst($this->api);
-        $class = 'addon\\wechatpay\\model\\'. 'Yi';
+        $class = 'addon\\wechatpay\\model\\'. $this->pay_type_way;
         if (!class_exists($class)) throw new ApiException(-1, "Class '{$class}' not found");
 
         try {

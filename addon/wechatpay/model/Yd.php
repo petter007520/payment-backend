@@ -20,7 +20,7 @@ use think\facade\Log;
  * 微信支付v3支付
  * 版本 1.0.4
  */
-class Yi extends BaseModel
+class Yd extends BaseModel
 {
     /**
      * 微信支付配置
@@ -29,7 +29,6 @@ class Yi extends BaseModel
     private $apikey;
     private $mchId;
     private $callback_url;
-    private $pay_code;
 
     /**
      * 支付实例
@@ -39,11 +38,10 @@ class Yi extends BaseModel
 
     public function __construct($config)
     {
-        $this->api = $config['api'] ?? '';
+        $this->api = $config['api'] ? $config['api'].'/api/v3/payment' : '';
         $this->apikey = $config['app_secrect'];
         $this->mchId = $config['mch_id'];
         $this->callback_url = $config['callback_url'];
-        $this->pay_code = $config['pay_code'];
     }
 
     /**
@@ -53,20 +51,21 @@ class Yi extends BaseModel
      */
     public function pay(array $param){
         $signBody = [
-            "pay_memberid" => $this->mchId,//商户ID
-            "pay_orderid" => $param["out_trade_no"],//上送订单号唯一, 字符长度20
-            "pay_amount" => $param["pay_money"],//单位：元
-            "pay_applydate" => date('Y-m-d H:i:s',time()),//时间格式：2016-12-26 18:18:18
-            "pay_bankcode" => $this->pay_code,//银行编码
-            "pay_notifyurl" => $this->callback_url,//交易金额（元）
-            "pay_callbackurl" => 'test',//页面跳转返回地址
+            "partnerid" => $this->mchId,//商户ID
+            "amount" => $param["pay_money"],//*字符串类型 “20.00”  请保留2位小数
+            "notifyurl" => $this->callback_url,//交易金额（元）
+            "orderid" => $param["out_trade_no"],//订单时间（例如：2021-05-06 10:20:09）
+            "remark" => '星新新能源',// 有填值就行，签名用
+            "paytype" => '1',//1:微信支付 2：支付宝支付 3：银行卡支付 4：USDT-TRC20 5：USDT-ERC20
+            "returnurl" => 'test',//页面跳转返回地址
         ];
 
         $sign = $this->sign($signBody);
-        $signBody = array_merge($signBody,['pay_md5sign'=>$sign,'pay_productname'=>'蔚莱普康','ip'=>$param['ip']]);
+        $signBody = array_merge($signBody,['sign'=>$sign]);
         $result = $this->curl($this->api,http_build_query($signBody));
         Log::write('支付返回：'.json_encode($result).'--签名参数'.json_encode($signBody));
-        if ((isset($result["code"]) && $result["code"] != 1) || (isset($result["status"]) && $result["status"] =='error')) return $this->error([], $result["msg"]);
+        if ($result["status"] != 200 ) return $this->error([], $result["msg"]);
+
         $return = [
             "type" => "url",
             "url" => $result['url']
@@ -88,7 +87,7 @@ class Yi extends BaseModel
             $signStr .= $key."=".$val."&";
         }
         $signParams = $signStr.'key='.$this->apikey;
-        return strtoupper(md5($signParams));
+        return strtolower(md5($signParams));
     }
 
     public function curl($url, $data){
