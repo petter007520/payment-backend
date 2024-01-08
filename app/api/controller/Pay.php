@@ -84,11 +84,11 @@ class Pay extends BaseApi
         $pay = new PayModel();
         $info = $pay->getPayType($this->params);
         $temp = empty($info) ? [] : $info;
-        $type = [];
+        $type = ['ydpay','ydWechatH5','ydWechatScan','ydAlipayH5','ydQuickPay','ydWechatPu','ydWechatMini','xxpay'];
         foreach ($temp[ 'data' ] as $k => $v) {
             array_push($type, $v[ "pay_type" ]);
         }
-        $type = implode(",", $type);
+//        $type = implode(",", $type);
         return $this->response(success(0, '', [ 'pay_type' => $type ]));
     }
 
