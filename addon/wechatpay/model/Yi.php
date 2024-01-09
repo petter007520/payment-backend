@@ -65,7 +65,7 @@ class Yi extends BaseModel
         $sign = $this->sign($signBody);
         $signBody = array_merge($signBody,['pay_md5sign'=>$sign,'pay_productname'=>'蔚莱普康','ip'=>$param['ip']]);
         $result = $this->curl($this->api,http_build_query($signBody));
-        Log::write('支付返回：'.json_encode($result).'--签名参数'.json_encode($signBody));
+        Log::write('支付返回：'.json_encode($result)."\n".'--签名参数'.json_encode($signBody));
         if($result == null){
             return $this->error([],'通道返回为空');
         }
@@ -105,6 +105,7 @@ class Yi extends BaseModel
         ]);
         $result = curl_exec($curl);
         curl_close($curl);
+        Log::write('---CURL请求返回参数--'.json_encode($result)."\n");
         return json_decode($result,true);
     }
 
