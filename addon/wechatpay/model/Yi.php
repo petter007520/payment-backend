@@ -73,7 +73,7 @@ class Yi extends BaseModel
         if ((isset($result["code"]) && $result["code"] != 1) || (isset($result["status"]) && $result["status"] =='error')) return $this->error([], $result["msg"]);
         $return = [
             "type" => "url",
-            "url" => $result['url']
+            "url" => $result['pay_url']
         ];
         return $this->success($return);
     }
