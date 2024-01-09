@@ -58,6 +58,7 @@ class Yi extends BaseModel
             "pay_amount" => $param["pay_money"],//单位：元
             "pay_applydate" => date('Y-m-d H:i:s',time()),//时间格式：2016-12-26 18:18:18
             "pay_bankcode" => $this->pay_code,//银行编码
+            "pay_json"  => 1,
             "pay_notifyurl" => $this->callback_url,//交易金额（元）
             "pay_callbackurl" => 'test',//页面跳转返回地址
         ];
